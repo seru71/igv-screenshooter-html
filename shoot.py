@@ -2,6 +2,7 @@
 
 import base64, gzip
 import pysam
+import os
     
     
 def b64encode_bam(bam_file):
@@ -18,7 +19,7 @@ def slice_bam(input_bam, output_bam, contig, start, end):
             sliced_bam.write(read)
     
 
-def get_igv_code(bam_path, contig, start, end):
+def get_igv_code(bam_path, contig, start, end, remove_temp_bam=True):
     
     # name of the output/ BAM
     sliced_bam_path = bam_path[:-len('bam')] + \
@@ -30,8 +31,9 @@ def get_igv_code(bam_path, contig, start, end):
     # encode the file in base64
     bam_slice_b64 = b64encode_bam(sliced_bam_path)
     
-    coords = contig+':'+str(start)+'-'+str(end)
-
+    if remove_temp_bam:
+        os.remove(sliced_bam_path)
+        
     code = """
 
         <div id="igvDiv" style="padding-top: 10px;padding-bottom: 10px; border:1px solid lightgray"></div>
@@ -59,7 +61,9 @@ def get_igv_code(bam_path, contig, start, end):
                 
         </script>
     """
-    
+
+    coords = contig+':'+str(start)+'-'+str(end)
+        
     return code % (coords, bam_slice_b64.decode("utf-8"))
             
 
