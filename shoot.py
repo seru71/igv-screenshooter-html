@@ -88,6 +88,25 @@ if __name__ == '__main__':
     
     import argparse
     parser = argparse.ArgumentParser()
-    parser.parse_args()
+    parser.add_argument("bam", help='Input BAM')
+    parser.add_argument("html", help='Output HTML with IGV visualization')
+    parser.add_argument("contig", help='Chromosome/contig of the interval to visualize')
+    parser.add_argument("start", help='Start position of the interval to visualize', type=int)
+    parser.add_argument("end", help='End position of the interval to visualize', type=int)
+
+    args = parser.parse_args()
+
+        
+    # e.g. chr2 10183665 10204021
     
-    print(get_screenshot_html('test.bam', 'chr2', 10183665, 10204021))
+    with open(args.html, 'w') as out:
+        out.write(get_screenshot_html(args.bam,
+                                      args.contig,
+                                      args.start, 
+                                      args.end))
+                  
+
+
+
+
+
