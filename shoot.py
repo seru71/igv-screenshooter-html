@@ -19,7 +19,7 @@ def slice_bam(input_bam, output_bam, contig, start, end):
             sliced_bam.write(read)
     
     
-def get_track_code(bam_path, contig, start, end, remove_tmp_bam=True):
+def get_track_code(bam_path, contig, start, end, remove_tmp_bam=True, tmp_dir='/tmp'):
     
     track_template =  """
        url: "data:application/gzip;base64,{data}",
@@ -30,8 +30,9 @@ def get_track_code(bam_path, contig, start, end, remove_tmp_bam=True):
     """
     
     # name of the output/ BAM
-    sliced_bam_path = bam_path[:-len('bam')] + \
-                      '_'.join([contig, str(start), str(end)]) + '.bam'
+    sliced_bam_path = os.path.join(tmp_dir, 
+                                   os.path.basename(bam_path)[:-len('bam')] + \
+                                  '_'.join([contig, str(start), str(end)]) + '.bam')
                       
     # extract a section of the BAM
     slice_bam(bam_path, sliced_bam_path, contig, start, end)
