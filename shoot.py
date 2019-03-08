@@ -23,11 +23,11 @@ def get_track_code(bam_path, contig, start, end, remove_tmp_bam=True, tmp_dir='/
     
     track_template =  """
        url: "data:application/gzip;base64,{data}",
-       name: "sample id",
+       name: "%s",
        height: 500,
        indexed: false,
        type: "alignment"
-    """
+    """ % os.path.basename(bam_path)
     
     # name of the output/ BAM
     sliced_bam_path = os.path.join(tmp_dir, 
